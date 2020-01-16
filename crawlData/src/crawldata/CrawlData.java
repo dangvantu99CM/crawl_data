@@ -58,15 +58,15 @@ public class CrawlData{
     
     File selectFolder=null;
     ArrayList<File> listFile = new ArrayList<>();
-    ArrayList<String> listResultLinkFile = new ArrayList<>();
-    ArrayList<String> listIframe = new ArrayList<>();
-    ArrayList<String> listScript = new ArrayList<>();
+    ArrayList<String> listResult = new ArrayList<>();
 
     public CrawlData() {
             panel.setLayout(new MigLayout());
             panel.add(btnImport, "skip, split2");
             panel.add(btnExport, "wrap");
+            panel.add(btnFilter, "top");
             panel.add(lblDsc, "top");
+            
             panel.add(new JScrollPane(txaDsc), "push, grow");
             frame.add(panel);
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -80,7 +80,6 @@ public class CrawlData{
             btnImport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    int result;
                     chooser = new JFileChooser(); 
                     chooser.setCurrentDirectory(new java.io.File("."));
                     chooser.setDialogTitle(choosertitle);
@@ -94,8 +93,12 @@ public class CrawlData{
                         selectFolder=chooser.getSelectedFile();
                         try {
                             listFilesForFolder(chooser.getSelectedFile());
+                            printResult(listResult);
+                            WriteToFile.writeToFile("output.txt", listResult);
                         } catch (FileNotFoundException ex) {
-                            Logger.getLogger(CrawlData.class.getName()).log(Level.SEVERE, null, ex);
+                            ex.printStackTrace();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
                         }
                     }
                     else {
@@ -107,7 +110,7 @@ public class CrawlData{
             return selectFolder;
     }
     
-    public void listFilesForFolder(final File folder) throws FileNotFoundException {
+    public void listFilesForFolder(final File folder) throws FileNotFoundException, IOException {
         for (final File file : folder.listFiles()) {
             if (file.isDirectory()) {
                 listFilesForFolder(file);
@@ -118,15 +121,23 @@ public class CrawlData{
                 Matcher m = r.matcher(fileName);
                 if (m.find()) {
                     listFile.add(file);
-                    ReadFile.readFile(file,listIframe,""); 
+                    ReadFile.readFile(file,listResult,""); 
                 }
             }
         }
+    }
+    
+    public void printResult(ArrayList<String>listResult){
+        String result="";
+        if(listResult.size() > 0){
+            for(String item:listResult){
+                result+=item;
+                result+="\n";
+            }
+        }
+        txaDsc.setText(result);
     }
  
     public static void main(String[] args) throws FileNotFoundException {
         CrawlData cd = new CrawlData();
         cd.actionListener();
-    }
-
-}

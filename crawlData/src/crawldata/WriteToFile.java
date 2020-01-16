@@ -14,12 +14,13 @@ import java.util.logging.LogRecord;
 
 public class WriteToFile {
     
-    public static void writeToFile(String fileName,ArrayList<String> listLinks) throws IOException{
+    public static void writeToFile(String fileName,ArrayList<String> listResult) throws IOException{
         FileWriter fileWriter = new FileWriter(fileName);
         PrintWriter printWriter = new PrintWriter(fileWriter);
-        if(listLinks.size() > 0){
-            for(String link:listLinks){
-                printWriter.print(link);
+        if(listResult.size() > 0){
+            for(String item:listResult){
+                printWriter.print(item);
+                printWriter.println("");
             }
         }
         printWriter.close();
