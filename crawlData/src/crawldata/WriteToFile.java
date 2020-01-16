@@ -25,10 +25,4 @@ public class WriteToFile {
         }
         printWriter.close();
     }
-    
-    public static void main(String []args) throws IOException{
-        WriteToFile wf = new WriteToFile();
-       // wf.writeToFile("aa");
-    }
-    
 }

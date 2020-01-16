@@ -5,6 +5,7 @@
  */
 package crawldata;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -46,9 +47,12 @@ public class CrawlData{
 
     JButton btnImport = new JButton("Import");
     JButton btnExport = new JButton("Export");
-    JButton btnFilter = new JButton("Lọc theo");
     
-    JTextField txtFilter = new JTextField();
+    JButton btnAdd = new JButton("Thêm trường");
+    
+    JButton btnFilter = new JButton("Lọc");
+    
+    JTextField txtFilter = new JTextField(20);
     
     JLabel lblDsc = new JLabel("Result:");
     JTextArea txaDsc = new JTextArea(10, 10);
@@ -58,21 +62,27 @@ public class CrawlData{
     
     File selectFolder=null;
     ArrayList<File> listFile = new ArrayList<>();
-    ArrayList<String> listResult = new ArrayList<>();
+    ArrayList<String> listResult;
+    ArrayList<JTextField> listJTextField = new ArrayList<>();
 
     public CrawlData() {
-            panel.setLayout(new MigLayout());
-            panel.add(btnImport, "skip, split2");
-            panel.add(btnExport, "wrap");
-            panel.add(btnFilter, "top");
-            panel.add(lblDsc, "top");
+            panel.setLayout(new MigLayout("debug, fillx", "[][grow][]"));
             
+            panel.add(btnImport, "span 0 1,skip, split2");
+            panel.add(btnExport, "span 1 1,wrap");
+            
+            panel.add(btnAdd,"span 2 1, grow, wrap,skip,split2");
+            //panel.add(txtFilter,"wrap, pushx, growx");
+            
+            panel.add(lblDsc, "top");
             panel.add(new JScrollPane(txaDsc), "push, grow");
+
             frame.add(panel);
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.pack();
             frame.setSize(600,600);
             frame.setLocationRelativeTo(null);
+            
             frame.setVisible(true);
     }
     
@@ -80,6 +90,7 @@ public class CrawlData{
             btnImport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                    listResult=new ArrayList<>();
                     chooser = new JFileChooser(); 
                     chooser.setCurrentDirectory(new java.io.File("."));
                     chooser.setDialogTitle(choosertitle);
@@ -104,6 +115,14 @@ public class CrawlData{
                     else {
                         System.out.println("No Selection ");
                     }
+                }
+            });
+            
+            btnAdd.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    listJTextField.add(txtFilter);
+                    panel.add((new AddFiled()).initAddField());
                 }
             });
             
@@ -141,3 +160,5 @@ public class CrawlData{
     public static void main(String[] args) throws FileNotFoundException {
         CrawlData cd = new CrawlData();
         cd.actionListener();
+    }
+}
